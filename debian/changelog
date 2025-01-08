@@ -1,6 +1,15 @@
-u-boot-vicharak (1.1.6) UNRELEASED; urgency=medium
+u-boot-vicharak (1.1.6) stable; urgency=medium
 
   * Add support for Axon
+  * lib:optee_clientApi: update optee level support.
+  * match-rockchip: Optimise mechanism
+  * configs: rk3588-axon: Change FIT image size to 2MB
+  * Revert "configs: rockchip: Increase boot priority of MMC0 (SDMMC)"
+  * arch: arm: dts: Update mmc aliases for vaaman
+  * Revert "common: image-fdt: Dynamically find and set root partition device"
+  * Revert "common: image-fdt: Add support to dynamically set root device"
+  * arch: arm: dts: Adapt dtb for Axon V0.3
+  * configs: axon: Add Support for PCIe and NVMe
 
  -- shailparmar03 <shailparmar26@gmail.com>  Sat, 25 May 2024 18:06:41 +0530
 
