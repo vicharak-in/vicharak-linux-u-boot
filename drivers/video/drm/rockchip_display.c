@@ -457,17 +457,17 @@ static int display_get_force_timing_from_dts(ofnode node,
 	ret = rockchip_ofnode_get_display_mode(node, mode, bus_flags);
 
 	if (ret) {
-		mode->clock = 74250;
+		mode->clock = 148500;
 		mode->flags = 0x5;
-		mode->hdisplay = 1280;
-		mode->hsync_start = 1390;
-		mode->hsync_end = 1430;
-		mode->htotal = 1650;
+		mode->hdisplay = 1920;
+		mode->hsync_start = 2008;
+		mode->hsync_end = 2052;
+		mode->htotal = 2200;
 		mode->hskew = 0;
-		mode->vdisplay = 720;
-		mode->vsync_start = 725;
-		mode->vsync_end = 730;
-		mode->vtotal = 750;
+		mode->vdisplay = 1080;
+		mode->vsync_start = 1084;
+		mode->vsync_end = 1089;
+		mode->vtotal = 1125;
 		mode->vrefresh = 60;
 		mode->picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9;
 		mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
@@ -606,17 +606,17 @@ static int display_get_edid_mode(struct display_state *state)
 		edid_print_info((void *)&conn_state->edid);
 	} else {
 		conn_state->bpc = 8;
-		mode->clock = 74250;
+		mode->clock = 148500;
 		mode->flags = 0x5;
-		mode->hdisplay = 1280;
-		mode->hsync_start = 1390;
-		mode->hsync_end = 1430;
-		mode->htotal = 1650;
+		mode->hdisplay = 1920;
+		mode->hsync_start = 2008;
+		mode->hsync_end = 2052;
+		mode->htotal = 2200;
 		mode->hskew = 0;
-		mode->vdisplay = 720;
-		mode->vsync_start = 725;
-		mode->vsync_end = 730;
-		mode->vtotal = 750;
+		mode->vdisplay = 1080;
+		mode->vsync_start = 1084;
+		mode->vsync_end = 1089;
+		mode->vtotal = 1125;
 		mode->vrefresh = 60;
 		mode->picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9;
 		mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
