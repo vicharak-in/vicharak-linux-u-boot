@@ -72,7 +72,12 @@
 
 #endif
 
+/* Enable usb keyboard */
+#ifdef CONFIG_USB_KEYBOARD
+#define CONFIG_PREBOOT "usb start"
+#else
 #define CONFIG_PREBOOT
+#endif
 
 /* enable usb config for usb ether */
 

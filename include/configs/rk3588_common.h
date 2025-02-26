@@ -88,7 +88,13 @@
 #define CONFIG_USB_OHCI_NEW
 #define CONFIG_SYS_USB_OHCI_MAX_ROOT_PORTS	1
 
+/* Enable usb keyboard */
+#ifdef CONFIG_USB_KEYBOARD
+#define CONFIG_PREBOOT "usb start"
+#else
 #define CONFIG_PREBOOT
+#endif
+
 #define CONFIG_LIB_HW_RAND
 
 #endif
