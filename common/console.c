@@ -533,20 +533,21 @@ void putc(const char c)
 		return;
 #endif
 
-#ifdef CONFIG_DEBUG_UART
-	/* if we don't have a console yet, use the debug UART */
-	if (!gd || !(gd->flags & GD_FLG_SERIAL_READY)) {
-		printch(c);
-		return;
-	}
-#endif
 	if (!gd->have_console)
 		return pre_console_putc(c);
 
 	if (gd->flags & GD_FLG_DEVINIT) {
 		/* Send to the standard output */
 		fputc(stdout, c);
-	} else {
+	} else
+
+#ifdef CONFIG_DEBUG_UART
+	/* if we don't have a console yet, use the debug UART */
+	if (!gd || !(gd->flags & GD_FLG_SERIAL_READY)) {
+		printch(c);
+	} else
+#endif
+	{
 		/* Send directly to the handler */
 		pre_console_putc(c);
 		serial_putc(c);

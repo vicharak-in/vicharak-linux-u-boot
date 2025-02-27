@@ -425,7 +425,7 @@ int board_late_init(void)
 #ifdef CONFIG_DM_CHARGE_DISPLAY
 	charge_display();
 #endif
-#ifdef CONFIG_DRM_ROCKCHIP
+#ifdef CONFIG_DRM_ROCKCHIP_SHOW_LOGO
 	rockchip_show_logo();
 #endif
 #ifdef CONFIG_ROCKCHIP_EINK_DISPLAY

@@ -80,10 +80,16 @@ config VIDEO_BPP32
 	  this option, such displays will not be supported and console output
 	  will be empty.
 
+config DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
+	bool "Support video framebuffer"
+	default y
+	help
+	  Enables the use of framebuffer for vidconsole.
+
 config CONSOLE_NORMAL
 	bool "Support a simple text console"
-	depends on DM_VIDEO
-	default y if DM_VIDEO
+	depends on DM_VIDEO && DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
+	default y if DM_VIDEO && DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
 	help
 	  Support drawing text on the frame buffer console so that it can be
 	  used as a console. Rotation is not supported by this driver (see
