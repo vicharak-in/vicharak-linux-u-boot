@@ -149,6 +149,7 @@ bool rockchip_connector_detect(struct display_state *state)
 	bool ret;
 	struct rockchip_connector *conn;
 
+	state->detected = false;
 	conn = state->conn_state.connector;
 	ret = rockchip_connector_path_detect(conn, state);
 	if (!ret)
@@ -159,6 +160,8 @@ bool rockchip_connector_detect(struct display_state *state)
 		if (!ret)
 			return false;
 	}
+
+	state->detected = true;
 
 	return true;
 }

@@ -294,6 +294,7 @@ struct display_state {
 	bool enabled_at_spl;
 	struct drm_display_mode force_mode;
 	u32 force_bus_format;
+	bool detected;
 };
 
 int drm_mode_vrefresh(const struct drm_display_mode *mode);
