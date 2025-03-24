@@ -62,6 +62,8 @@ static unsigned long memory_end;
 static struct base2_info base_parameter;
 static u32 align_size = PAGE_SIZE;
 
+unsigned long plat_fbbase = 0;
+
 /*
  * the phy types are used by different connectors in public.
  * The current version only has inno hdmi phy for hdmi and tve.
@@ -1201,7 +1203,8 @@ static int load_kernel_bmp_logo(struct logo_info *logo, const char *bmp_name)
 	return 0;
 }
 
-static int rockchip_read_distro_logo(void *logo_addr, int size)
+static int rockchip_read_distro_logo(void *logo_addr, int size,
+		const char* logo_name)
 {
 	const char *cmd = "part list ${devtype} ${devnum} -bootable devplist";
 	char *devnum, *devtype, *devplist;
@@ -1236,15 +1239,15 @@ static int rockchip_read_distro_logo(void *logo_addr, int size)
 	fs_argv[1] = devtype,
 	fs_argv[2] = devnum_part;
 	fs_argv[3] = logo_hex_str;
-	fs_argv[4] = "logo.bmp";
+	fs_argv[4] = (char *)logo_name;
 	fs_argv[5] = header_size_str;
 
 	if (do_load(NULL, 0, 6, fs_argv, FS_TYPE_ANY)) {
-		printf("%s: Failed to load logo.bmp\n", __func__);
+		printf("%s: Failed to load %s\n", __func__, logo_name);
 		return -EIO;
 	}
 
-	printf("%s: Load logo.bmp from %s\n", __func__, devnum_part);
+	printf("%s: Load %s from %s\n", __func__, logo_name, devnum_part);
 
 	return 0;
 }
@@ -1287,7 +1290,7 @@ static int load_bmp_logo(struct logo_info *logo, const char *bmp_name)
 		logo_source = FROM_RESOURCE;
 	else
 #endif
-	if (!rockchip_read_distro_logo(header, RK_BLK_SIZE)) {
+	if (!rockchip_read_distro_logo(header, RK_BLK_SIZE, bmp_name)) {
 		logo_source = FROM_DISTRO;
     } else {
 		free(header);
@@ -1326,7 +1329,7 @@ static int load_bmp_logo(struct logo_info *logo, const char *bmp_name)
 	} else
 #endif
 	if (logo_source == FROM_DISTRO) {
-		ret = rockchip_read_distro_logo(pdst, size);
+		ret = rockchip_read_distro_logo(pdst, size, bmp_name);
 		if (ret) {
 			printf("%s: failed to load logo.bmp\n", __func__);
 			ret = -ENOENT;
@@ -1389,6 +1392,11 @@ void rockchip_show_fbbase(ulong fbbase)
 
 		display_logo(s);
 	}
+}
+
+void rockchip_show_fbbase2(void)
+{
+	rockchip_show_fbbase(plat_fbbase);
 }
 
 int rockchip_show_bmp(const char *bmp)
@@ -2085,7 +2093,7 @@ static int rockchip_display_probe(struct udevice *dev)
 	uc_priv->bpix = VIDEO_BPP32;
 
 	#ifdef CONFIG_DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
-	rockchip_show_fbbase(plat->base);
+	plat_fbbase = plat->base;
 	video_set_flush_dcache(dev, true);
 	#endif
 
@@ -2108,11 +2116,15 @@ void rockchip_display_fixup(void *blob)
 
 	if (fdt_node_offset_by_compatible(blob, 0, "rockchip,drm-logo") >= 0) {
 		list_for_each_entry(s, &rockchip_display_list, head) {
+			if(!s->detected)
+				continue;
+
 			ret = load_bmp_logo(&s->logo, s->klogo_name);
 			if (ret < 0) {
 				s->is_klogo_valid = false;
 				printf("VP%d fail to load kernel logo\n", s->crtc_state.crtc_id);
 			} else {
+				display_logo(s);
 				s->is_klogo_valid = true;
 			}
 		}

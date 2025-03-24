@@ -14,6 +14,7 @@
 #include <menu.h>
 #include <post.h>
 #include <u-boot/sha256.h>
+#include <video_rockchip.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -269,6 +270,10 @@ static int abortboot(int bootdelay)
 		gd->flags &= ~GD_FLG_SILENT;
 #endif
 
+	if(abort){
+		rockchip_show_fbbase2();
+	}
+
 	return abort;
 }
 
@@ -362,6 +367,7 @@ void autoboot_command(const char *s)
 #if defined(CONFIG_AUTOBOOT_KEYED) && !defined(CONFIG_AUTOBOOT_KEYED_CTRLC)
 		disable_ctrlc(prev);	/* restore Control C checking */
 #endif
+		rockchip_show_fbbase2();
 	}
 
 #ifdef CONFIG_MENUKEY
