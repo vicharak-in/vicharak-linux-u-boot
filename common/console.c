@@ -672,6 +672,29 @@ int ctrlc(void)
 
 	return 0;
 }
+
+/* test if ctrl-q was pressed */
+static int ctrlq_disabled = 0;	/* see disable_ctrl() */
+static int ctrlq_was_pressed = 0;
+int ctrlq(void)
+{
+#ifndef CONFIG_SANDBOX
+	if (!ctrlq_disabled && gd->have_console) {
+		if (tstc()) {
+			switch (getc()) {
+			case 0x11:		/* ^Q - Control Q */
+				ctrlq_was_pressed = 1;
+				return 1;
+			default:
+				break;
+			}
+		}
+	}
+#endif
+
+	return 0;
+}
+
 /* Reads user's confirmation.
    Returns 1 if user's input is "y", "Y", "yes" or "YES"
 */
@@ -718,6 +741,27 @@ int had_ctrlc (void)
 void clear_ctrlc(void)
 {
 	ctrlc_was_pressed = 0;
+}
+
+/* pass 1 to disable ctrlq() checking, 0 to enable.
+ * returns previous state
+ */
+int disable_ctrlq(int disable)
+{
+	int prev = ctrlq_disabled;	/* save previous state */
+
+	ctrlq_disabled = disable;
+	return prev;
+}
+
+int had_ctrlq (void)
+{
+	return ctrlq_was_pressed;
+}
+
+void clear_ctrlq(void)
+{
+	ctrlq_was_pressed = 0;
 }
 
 /** U-Boot INIT FUNCTIONS *************************************************/

@@ -9,6 +9,7 @@
 #include <malloc.h>
 #include <errno.h>
 #include <linux/list.h>
+#include <ansi.h>
 
 #include "menu.h"
 
@@ -116,11 +117,17 @@ __weak void menu_display_statusline(struct menu *m)
 static inline void menu_display(struct menu *m)
 {
 	if (m->title) {
-		puts(m->title);
-		putc('\n');
+		printf(ANSI_CURSOR_POSITION, 1, 1);
+		puts(ANSI_CLEAR_LINE);
+		printf(ANSI_CURSOR_POSITION, 2, 1);
+		printf("  *** %s ***", m->title);
+		puts(ANSI_CLEAR_LINE_TO_END);
+	} else {
+		menu_display_statusline(m);
 	}
-	menu_display_statusline(m);
 
+	/* Set cursor to 4th row (menu header & space) */
+	printf(ANSI_CURSOR_POSITION, 4, 1);
 	menu_items_iter(m, menu_item_print, NULL);
 }
 
@@ -194,14 +201,15 @@ static inline int menu_interactive_choice(struct menu *m, void **choice)
 		menu_display(m);
 
 		if (!m->item_choice) {
-			readret = cli_readline_into_buffer("Enter choice: ",
+			readret = cli_readline_into_buffer("\nEnter choice: ",
 							   cbuf,
 							   m->timeout / 10);
+			puts("\n");
 
 			if (readret >= 0) {
 				choice_item = menu_item_by_key(m, cbuf);
 				if (!choice_item)
-					printf("%s not found\n", cbuf);
+					printf("\t[(%s) not a valid key]\n", cbuf);
 			} else if (readret == -1)  {
 				printf("<INTERRUPT>\n");
 				return -EINTR;
@@ -218,6 +226,8 @@ static inline int menu_interactive_choice(struct menu *m, void **choice)
 		if (!choice_item)
 			m->timeout = 0;
 	}
+
+	puts(ANSI_CLEAR_CONSOLE);
 
 	*choice = choice_item->data;
 
