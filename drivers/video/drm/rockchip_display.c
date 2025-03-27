@@ -26,6 +26,8 @@
 
 #include "bmp_helper.h"
 #include "rockchip_display.h"
+#include "dm/uclass-id.h"
+#include "dm/uclass.h"
 #include "rockchip_crtc.h"
 #include "rockchip_connector.h"
 #include "rockchip_bridge.h"
@@ -61,8 +63,6 @@ static unsigned long cubic_lut_memory_start;
 static unsigned long memory_end;
 static struct base2_info base_parameter;
 static u32 align_size = PAGE_SIZE;
-
-unsigned long plat_fbbase = 0;
 
 /*
  * the phy types are used by different connectors in public.
@@ -1394,11 +1394,6 @@ void rockchip_show_fbbase(ulong fbbase)
 	}
 }
 
-void rockchip_show_fbbase2(void)
-{
-	rockchip_show_fbbase(plat_fbbase);
-}
-
 int rockchip_show_bmp(const char *bmp)
 {
 	struct display_state *s;
@@ -2093,7 +2088,6 @@ static int rockchip_display_probe(struct udevice *dev)
 	uc_priv->bpix = VIDEO_BPP32;
 
 	#ifdef CONFIG_DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
-	plat_fbbase = plat->base;
 	video_set_flush_dcache(dev, true);
 	#endif
 
@@ -2323,9 +2317,27 @@ static int do_rockchip_vop_dump(cmd_tbl_t *cmdtp, int flag, int argc,
 	return ret;
 }
 
+static int do_rockchip_fbbase_show(cmd_tbl_t *cmdtp, int flag, int argc,
+			char *const argv[])
+{
+	struct video_uc_platdata *plat;
+	struct udevice *dev;
+
+	if (argc != 1)
+		return CMD_RET_USAGE;
+
+	if (uclass_first_device_err(UCLASS_VIDEO, &dev))
+		return CMD_RET_FAILURE;
+
+	plat = dev_get_uclass_platdata(dev);
+	rockchip_show_fbbase(plat->base);
+
+	return 0;
+}
+
 U_BOOT_CMD(
 	rockchip_show_logo, 1, 1, do_rockchip_logo_show,
-	"load and display log from resource partition",
+	"load and display logo from resource partition",
 	NULL
 );
 
@@ -2339,4 +2351,10 @@ U_BOOT_CMD(
 	vop_dump, 2, 1, do_rockchip_vop_dump,
 	"dump vop regs",
 	" [a/all]"
+);
+
+U_BOOT_CMD(
+	rockchip_show_fbbase, 1, 1, do_rockchip_fbbase_show,
+	"display framebuffer base",
+	NULL
 );
