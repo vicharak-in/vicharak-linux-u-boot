@@ -17,6 +17,7 @@
 #include <linux/list.h>
 #include <fs.h>
 #include <asm/io.h>
+#include <ansi.h>
 
 #include "menu.h"
 #include "cli.h"
@@ -571,6 +572,7 @@ static void label_print(void *data)
 	struct pxe_label *label = data;
 	const char *c = label->menu ? label->menu : label->name;
 
+	printf(ANSI_CURSOR_COLUMN, 4);
 	printf("%s:\t%s\n", label->num, c);
 }
 
@@ -1665,6 +1667,14 @@ static void handle_pxe_menu(cmd_tbl_t *cmdtp, struct pxe_menu *cfg)
 	m = pxe_menu_to_menu(cfg);
 	if (!m)
 		return;
+
+#ifdef CONFIG_DRM_ROCKCHIP
+	run_command("rockchip_show_fbbase", 0);
+
+#endif
+
+	puts(ANSI_CLEAR_CONSOLE);
+	printf(ANSI_CURSOR_POSITION, 1, 1);
 
 	err = menu_get_choice(m, &choice);
 

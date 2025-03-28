@@ -7,11 +7,13 @@
 #define __RK3399_VAAMAN_H
 
 #include <configs/rk3399_common.h>
+#include <configs/vicharak_common.h>
 
 #define ROCKCHIP_DEVICE_SETTINGS \
 		"stdin=serial,usbkbd\0" \
 		"stdout=serial,vidconsole\0" \
-		"stderr=serial,vidconsole\0"
+		"stderr=serial,vidconsole\0" \
+		VICHARAK_BOOT_MENU
 
 /* Fix build error with SPL build */
 #ifndef CONFIG_SPL_BUILD

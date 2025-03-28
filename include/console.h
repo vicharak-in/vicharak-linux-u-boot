@@ -20,6 +20,11 @@ void clear_ctrlc(void);	/* clear the Control-C condition */
 int disable_ctrlc(int);	/* 1 to disable, 0 to enable Control-C detect */
 int confirm_yesno(void);        /*  1 if input is "y", "Y", "yes" or "YES" */
 
+int ctrlq(void);
+int had_ctrlq(void);	/* have we had a Control-Q since last clear? */
+void clear_ctrlq(void);	/* clear the Control-Q condition */
+int disable_ctrlq(int);	/* 1 to disable, 0 to enable Control-Q detect */
+
 /**
  * console_record_init() - set up the console recording buffers
  *

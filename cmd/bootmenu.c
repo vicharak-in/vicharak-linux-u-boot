@@ -425,7 +425,8 @@ cleanup:
 	if (title && command) {
 		debug("Starting entry '%s'\n", title);
 		free(title);
-		run_command(command, 0);
+		if (run_command(command, 0))
+			run_command("bootmenu 10\0", 0);
 		free(command);
 	}
 

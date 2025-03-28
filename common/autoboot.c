@@ -14,7 +14,6 @@
 #include <menu.h>
 #include <post.h>
 #include <u-boot/sha256.h>
-#include <video_rockchip.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -221,7 +220,8 @@ static int __abortboot(int bootdelay)
 #endif
 
 #ifdef CONFIG_ARCH_ROCKCHIP
-	if (!IS_ENABLED(CONFIG_CONSOLE_DISABLE_CLI) && ctrlc()) {	/* we press ctrl+c ? */
+	if (!IS_ENABLED(CONFIG_CONSOLE_DISABLE_CLI) && (ctrlc() || ctrlq())) {
+		/* we press ctrl+c or ctrl+q? */
 #else
 	/*
 	 * Check if key already pressed
@@ -238,7 +238,8 @@ static int __abortboot(int bootdelay)
 		/* delay 1000 ms */
 		ts = get_timer(0);
 		do {
-			if (ctrlc()) {	/* we got a ctrl+c key press	*/
+			if (ctrlc() || ctrlq()) {
+				/* we got a ctrl+c or ctrl+q key press	*/
 				abort  = 1;	/* don't auto boot	*/
 				bootdelay = 0;	/* no more delay	*/
 # ifdef CONFIG_MENUKEY
@@ -271,7 +272,11 @@ static int abortboot(int bootdelay)
 #endif
 
 	if(abort){
-		rockchip_show_fbbase2();
+		run_command("rockchip_show_fbbase", 0);
+#ifdef CONFIG_CMD_BOOTMENU
+		if (had_ctrlq())
+			run_command("bootmenu 10", 0);
+#endif
 	}
 
 	return abort;
@@ -367,7 +372,11 @@ void autoboot_command(const char *s)
 #if defined(CONFIG_AUTOBOOT_KEYED) && !defined(CONFIG_AUTOBOOT_KEYED_CTRLC)
 		disable_ctrlc(prev);	/* restore Control C checking */
 #endif
-		rockchip_show_fbbase2();
+		run_command("rockchip_show_fbbase", 0);
+#ifdef CONFIG_CMD_BOOTMENU
+		if (had_ctrlq())
+			run_command("bootmenu 10", 0);
+#endif
 	}
 
 #ifdef CONFIG_MENUKEY
