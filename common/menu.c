@@ -199,17 +199,21 @@ static inline int menu_interactive_choice(struct menu *m, void **choice)
 		cbuf[0] = '\0';
 
 		menu_display(m);
+		puts("\n");
 
 		if (!m->item_choice) {
-			readret = cli_readline_into_buffer("\nEnter choice: ",
+			puts(ANSI_CLEAR_LINE);
+			readret = cli_readline_into_buffer("Enter choice: ",
 							   cbuf,
 							   m->timeout / 10);
 			puts("\n");
 
 			if (readret >= 0) {
 				choice_item = menu_item_by_key(m, cbuf);
-				if (!choice_item)
+				if (!choice_item) {
+					puts(ANSI_CLEAR_LINE);
 					printf("\t[(%s) not a valid key]\n", cbuf);
+				}
 			} else if (readret == -1)  {
 				printf("<INTERRUPT>\n");
 				return -EINTR;
