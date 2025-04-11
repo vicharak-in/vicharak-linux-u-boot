@@ -1068,11 +1068,19 @@ static void check_status(td_t *td_list)
 	urb_priv_t *lurb_priv = td_list->ed->purb;
 	int	   urb_len    = lurb_priv->length;
 	__u32      *phwHeadP  = &td_list->ed->hwHeadP;
-	int	   cc;
+	static int prev_cc = 0;
+	int cc;
 
 	cc = TD_CC_GET(m32_swap(td_list->hwINFO));
 	if (cc) {
-		err(" USB-error: %s (%x)", cc_to_string[cc], cc);
+		if (cc > 13) {
+			/* Suppressed this error msg to dbg */
+			dbg("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
+		} else if (prev_cc != cc) {
+			/* show same errors only once */
+			err("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
+			prev_cc = cc;
+		}
 
 		invalidate_dcache_ed(td_list->ed);
 		if (*phwHeadP & m32_swap(0x1)) {
@@ -1136,6 +1144,7 @@ static void finish_urb(ohci_t *ohci, urb_priv_t *urb, int status)
 static int takeback_td(ohci_t *ohci, td_t *td_list)
 {
 	ed_t *ed;
+	static int prev_cc = 0;
 	int cc;
 	int stat = 0;
 	/* urb_t *urb; */
@@ -1155,8 +1164,14 @@ static int takeback_td(ohci_t *ohci, td_t *td_list)
 	/* error code of transfer */
 	cc = TD_CC_GET(tdINFO);
 	if (cc) {
-		err("USB-error: %s (%x)", cc_to_string[cc], cc);
-		stat = cc_to_error[cc];
+		if (cc > 13) {
+			/* Suppressed this error msg to dbg */
+			dbg("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
+		} else if (prev_cc != cc) {
+			/* show same errors only once */
+			err("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
+			prev_cc = cc;
+		}
 	}
 
 	/* see if this done list makes for all TD's of current URB,
@@ -1519,7 +1534,7 @@ static int submit_common_msg(ohci_t *ohci, struct usb_device *dev,
 {
 	int stat = 0;
 	int maxsize = usb_maxpacket(dev, pipe);
-	int timeout;
+	int timeout, giveup = 0;
 	urb_priv_t *urb;
 	ohci_dev_t *ohci_dev;
 
@@ -1583,6 +1598,16 @@ static int submit_common_msg(ohci_t *ohci, struct usb_device *dev,
 				dbg("*");
 
 		} else {
+			if (!usb_pipeint(pipe))
+				err("CTL:TIMEOUT ");
+			dbg("submit_common_msg: TO status %x\n", stat);
+			urb->finished = 1;
+			stat = USB_ST_CRC_ERR;
+			break;
+		}
+
+		/* early quit */
+		if(urb->td_cnt == 0 && giveup++ > 30) {
 			if (!usb_pipeint(pipe))
 				err("CTL:TIMEOUT ");
 			dbg("submit_common_msg: TO status %x\n", stat);
