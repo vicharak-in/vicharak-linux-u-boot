@@ -1073,10 +1073,7 @@ static void check_status(td_t *td_list)
 
 	cc = TD_CC_GET(m32_swap(td_list->hwINFO));
 	if (cc) {
-		if (cc > 13) {
-			/* Suppressed this error msg to dbg */
-			dbg("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
-		} else if (prev_cc != cc) {
+		if (prev_cc != cc) {
 			/* show same errors only once */
 			err("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
 			prev_cc = cc;
@@ -1164,10 +1161,7 @@ static int takeback_td(ohci_t *ohci, td_t *td_list)
 	/* error code of transfer */
 	cc = TD_CC_GET(tdINFO);
 	if (cc) {
-		if (cc > 13) {
-			/* Suppressed this error msg to dbg */
-			dbg("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
-		} else if (prev_cc != cc) {
+		if (prev_cc != cc) {
 			/* show same errors only once */
 			err("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
 			prev_cc = cc;
@@ -1534,7 +1528,7 @@ static int submit_common_msg(ohci_t *ohci, struct usb_device *dev,
 {
 	int stat = 0;
 	int maxsize = usb_maxpacket(dev, pipe);
-	int timeout, giveup = 0;
+	int timeout;
 	urb_priv_t *urb;
 	ohci_dev_t *ohci_dev;
 
@@ -1598,16 +1592,6 @@ static int submit_common_msg(ohci_t *ohci, struct usb_device *dev,
 				dbg("*");
 
 		} else {
-			if (!usb_pipeint(pipe))
-				err("CTL:TIMEOUT ");
-			dbg("submit_common_msg: TO status %x\n", stat);
-			urb->finished = 1;
-			stat = USB_ST_CRC_ERR;
-			break;
-		}
-
-		/* early quit */
-		if(urb->td_cnt == 0 && giveup++ > 30) {
 			if (!usb_pipeint(pipe))
 				err("CTL:TIMEOUT ");
 			dbg("submit_common_msg: TO status %x\n", stat);
