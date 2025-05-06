@@ -695,6 +695,29 @@ int ctrlq(void)
 	return 0;
 }
 
+/* test if ctrl-q or ctrl-c was pressed */
+int ctrlc_or_q(void)
+{
+#ifndef CONFIG_SANDBOX
+	if ((!ctrlq_disabled || !ctrlc_disabled) && gd->have_console) {
+		if (tstc()) {
+			switch (getc()) {
+			case 0x11:		/* ^Q - Control Q */
+				ctrlq_was_pressed = ctrlq_disabled ? ctrlq_was_pressed : 1;
+				return 1;
+			case 0x03:		/* ^C - Control C */
+				ctrlc_was_pressed = ctrlc_disabled ? ctrlc_was_pressed : 1;
+				return 0;
+			default:
+				break;
+			}
+		}
+	}
+#endif
+
+	return 0;
+}
+
 /* Reads user's confirmation.
    Returns 1 if user's input is "y", "Y", "yes" or "YES"
 */

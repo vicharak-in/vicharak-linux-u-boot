@@ -26,6 +26,13 @@ void clear_ctrlq(void);	/* clear the Control-Q condition */
 int disable_ctrlq(int);	/* 1 to disable, 0 to enable Control-Q detect */
 
 /**
+ * ctrlc_or_q() - checks for both ctrl-q or ctrl-c
+ *
+ * Calling explicitly both ctrlq() & ctrlc() consumes the input for other.
+ */
+int ctrlc_or_q(void);
+
+/**
  * console_record_init() - set up the console recording buffers
  *
  * This should be called as soon as malloc() is available so that the maximum

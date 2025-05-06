@@ -220,7 +220,7 @@ static int __abortboot(int bootdelay)
 #endif
 
 #ifdef CONFIG_ARCH_ROCKCHIP
-	if (!IS_ENABLED(CONFIG_CONSOLE_DISABLE_CLI) && (ctrlc() || ctrlq())) {
+	if (!IS_ENABLED(CONFIG_CONSOLE_DISABLE_CLI) && ctrlc_or_q()) {
 		/* we press ctrl+c or ctrl+q? */
 #else
 	/*
@@ -238,7 +238,7 @@ static int __abortboot(int bootdelay)
 		/* delay 1000 ms */
 		ts = get_timer(0);
 		do {
-			if (ctrlc() || ctrlq()) {
+			if (ctrlc_or_q()) {
 				/* we got a ctrl+c or ctrl+q key press	*/
 				abort  = 1;	/* don't auto boot	*/
 				bootdelay = 0;	/* no more delay	*/
