@@ -525,7 +525,6 @@ static void abort_td(struct usb_device *udev, int ep_index)
 	union xhci_trb *event;
 	xhci_comp_code comp;
 	trb_type type;
-	u64 addr;
 	u32 field;
 
 	xhci_queue_command(ctrl, NULL, udev->slot_id, ep_index, TRB_STOP_RING);
