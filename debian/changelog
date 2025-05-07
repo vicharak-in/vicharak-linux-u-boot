@@ -1,3 +1,23 @@
+u-boot-vicharak (1.1.10) stable; urgency=medium
+
+  * Enable U-boot HDMI console and keyboard support.
+  * Enabled CONFIG_SYS_USB_EVENT_POLL_VIA_INT_QUEUE for better keyboard support.
+
+  * xHCI:
+    - Fixed crash when Type-C USB devices are plugged during U-Boot.
+    - Improved timeout handling and endpoint recovery.
+
+  * UI:
+    - Improved boot menu prompt readability.
+
+ -- peonix0 <ajeetsinghchahar2@gmail.com>  Tue, 06 May 2025 18:06:41 +0530
+
+u-boot-vicharak (1.1.9) stable; urgency=medium
+
+  * Revert U-boot HDMI Console and Keyboard support
+
+ -- Avi Shihora <avi.shihora.w23@gmail.com>  Mon, 21 Apr 2025 09:24:18 +0530
+
 u-boot-vicharak (1.1.6) stable; urgency=medium
 
   * Add support for Axon
