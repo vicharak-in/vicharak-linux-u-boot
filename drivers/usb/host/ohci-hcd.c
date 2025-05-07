@@ -1161,6 +1161,7 @@ static int takeback_td(ohci_t *ohci, td_t *td_list)
 	/* error code of transfer */
 	cc = TD_CC_GET(tdINFO);
 	if (cc) {
+		stat = cc_to_error[cc];
 		if (prev_cc != cc) {
 			/* show same errors only once */
 			err("[%s] USB-error: %s (%x)", __func__, cc_to_string[cc], cc);
