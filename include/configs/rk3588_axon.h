@@ -14,7 +14,7 @@
 		"stdin=usbkbd,serial\0" \
 		VICHARAK_BOOT_MENU
 
-#define CONFIG_SYS_MMC_ENV_DEV		1	/* eMMC */
+#define CONFIG_SYS_MMC_ENV_DEV		0	/* eMMC */
 
 #include <configs/rk3588_common.h>
 
