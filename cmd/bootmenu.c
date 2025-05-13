@@ -27,6 +27,7 @@ struct bootmenu_entry {
 	char key[3];			/* key identifier of number */
 	char *title;			/* title of entry */
 	char *command;			/* hush command of entry */
+	char *optional;			/* any optional data e.g. boot target */
 	struct bootmenu_data *menu;	/* this bootmenu */
 	struct bootmenu_entry *next;	/* next menu entry (num+1) */
 };
@@ -253,7 +254,7 @@ static struct bootmenu_data *bootmenu_create(int delay)
 	struct bootmenu_entry *iter = NULL;
 
 	int len;
-	char *sep;
+	char *sep0, *sep1;
 	struct bootmenu_entry *entry;
 
 	menu = malloc(sizeof(struct bootmenu_data));
@@ -265,8 +266,8 @@ static struct bootmenu_data *bootmenu_create(int delay)
 	menu->first = NULL;
 
 	while ((option = bootmenu_getoption(i))) {
-		sep = strchr(option, '=');
-		if (!sep) {
+		sep0 = strchr(option, '=');
+		if (!sep0) {
 			printf("Invalid bootmenu entry: %s\n", option);
 			break;
 		}
@@ -275,7 +276,7 @@ static struct bootmenu_data *bootmenu_create(int delay)
 		if (!entry)
 			goto cleanup;
 
-		len = sep-option;
+		len = sep0 - option;
 		entry->title = malloc(len + 1);
 		if (!entry->title) {
 			free(entry);
@@ -284,14 +285,33 @@ static struct bootmenu_data *bootmenu_create(int delay)
 		memcpy(entry->title, option, len);
 		entry->title[len] = 0;
 
-		len = strlen(sep + 1);
+		sep1 = strchr(sep0 + 1, '=');
+		if (sep1) {
+			len = sep1 - (sep0 + 1);
+
+			entry->optional = malloc(len + 1);
+			if (!entry->optional) {
+				free(entry->title);
+				free(entry);
+				goto cleanup;
+			}
+			memcpy(entry->optional, sep0 + 1, len);
+			entry->optional[len] = '\0';
+		} else {
+			sep1 = sep0;
+			entry->optional = NULL;
+		}
+
+		len = strlen(sep1 + 1);
 		entry->command = malloc(len + 1);
 		if (!entry->command) {
+			free(entry->optional);
 			free(entry->title);
 			free(entry);
 			goto cleanup;
 		}
-		memcpy(entry->command, sep + 1, len);
+
+		memcpy(entry->command, sep1 + 1, len);
 		entry->command[len] = 0;
 
 		sprintf(entry->key, "%d", i);
@@ -330,6 +350,8 @@ static struct bootmenu_data *bootmenu_create(int delay)
 			free(entry);
 			goto cleanup;
 		}
+
+		entry->optional = NULL;
 
 		sprintf(entry->key, "%d", i);
 
