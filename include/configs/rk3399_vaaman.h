@@ -25,7 +25,7 @@
 #define CONFIG_MMC_SDHCI_SDMA
 
 /* Set eMMC as the default boot device */
-#define CONFIG_SYS_MMC_ENV_DEV 1
+#define CONFIG_SYS_MMC_ENV_DEV 0
 #define CONFIG_SYS_MMC_MAX_BLK_COUNT	32768
 
 /* Enable efuse support for cpuid, serial and macaddr */
