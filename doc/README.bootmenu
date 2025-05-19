@@ -23,6 +23,7 @@ The assembling of the menu is done via a set of environment variables
 
   bootmenu_delay=<delay>
   bootmenu_<num>="<title>=<commands>"
+  bootmenu_<num>="<title>=<optional>=<commands>"     /* extended form */
 
   <delay> is the autoboot delay in seconds, after which the first
   menu entry will be selected automatically
@@ -35,7 +36,11 @@ The assembling of the menu is done via a set of environment variables
   <commands> are commands which will be executed when a menu
   entry is selected
 
-  (title and commands are separated by first appearance of '='
+  <optional> is an optional field used for additional metadata,
+  such as the boot source (e.g., mmc0, usb0). This field may be
+  omitted or left empty.
+
+  (title, optional, and commands are separated by appearance of '='
    character in the environment variable)
 
 First (optional) argument of the "bootmenu" command is a delay specifier
@@ -54,10 +59,11 @@ to the user.
 
 Example environment:
 
-  setenv bootmenu_0 Boot 1. kernel=bootm 0x82000000  # Set first menu entry
-  setenv bootmenu_1 Boot 2. kernel=bootm 0x83000000  # Set second menu entry
-  setenv bootmenu_2 Reset board=reset                # Set third menu entry
-  setenv bootmenu_3 U-Boot boot order=boot           # Set fourth menu entry
+  setenv bootmenu_0 Boot 1. kernel=bootm 0x82000000    # Set first menu entry
+  setenv bootmenu_1 Boot 2. kernel=bootm 0x83000000    # Set second menu entry
+  setenv bootmenu_2 Boot 3. USB-Boot=usb0=bootcmd_usb0 # Set thirt menu entry
+  setenv bootmenu_3 Reset board=reset                  # Set fourth menu entry
+  setenv bootmenu_4 U-Boot boot order=boot             # Set fifth menu entry
   bootmenu 20        # Run bootmenu with autoboot delay 20s
 
 
@@ -70,6 +76,7 @@ The above example will be rendered as below
 │                                          │
 │     Boot 1. kernel                       │
 │     Boot 2. kernel                       │
+│     Boot 3. USB-Boot                     │
 │     Reset board                          │
 │     U-Boot boot order                    │
 │     U-Boot console                       │
