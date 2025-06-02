@@ -1,3 +1,12 @@
+u-boot-vicharak (1.1.11) stable; urgency=medium
+
+  * Enable bootmenu to allow user selection of boot targets
+  * bootmenu: Add support for selecting the default boot target interactively
+    - Press Shift+D in the bootmenu UI to change default boot device
+    - Default target is marked with '[Default]' in the menu
+
+ -- peonix0 <ajeetsinghchahar2@gmail.com>  Mon, 19 May 2025 18:13:53 +0530
+
 u-boot-vicharak (1.1.10) stable; urgency=medium
 
   * Enable U-boot HDMI console and keyboard support.
