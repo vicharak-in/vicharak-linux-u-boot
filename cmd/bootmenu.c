@@ -243,7 +243,7 @@ static void bootmenu_autoboot_loop(struct bootmenu_data *menu,
 	puts(ANSI_CLEAR_LINE);
 
 	if (menu->delay == 0)
-		*key = KEY_SELECT;
+		*key = KEY_EXIT;
 }
 
 static void bootmenu_loop(struct bootmenu_data *menu,
@@ -324,6 +324,8 @@ static char *bootmenu_choice_entry(void *data)
 		if (menu->delay >= 0) {
 			/* Autoboot was not stopped */
 			bootmenu_autoboot_loop(menu, &key, &esc);
+			/* Reset cursor position */
+			printf(ANSI_CURSOR_POSITION, menu->count + 14, 1);
 		} else {
 			/* Some key was pressed, so autoboot was stopped */
 			bootmenu_loop(menu, &key, &esc);
