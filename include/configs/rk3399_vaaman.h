@@ -7,7 +7,7 @@
 #define __RK3399_VAAMAN_H
 
 #include <configs/rk3399_common.h>
-#include <configs/vicharak_common.h>
+#include <configs/vicharak_common_defs.h>
 
 #define ROCKCHIP_DEVICE_SETTINGS \
 		"stdin=serial,usbkbd\0" \

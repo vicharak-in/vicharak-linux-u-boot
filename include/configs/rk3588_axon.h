@@ -6,7 +6,7 @@
 #ifndef __RK3588_AXON_H
 #define __RK3588_AXON_H
 
-#include <configs/vicharak_common.h>
+#include <configs/vicharak_common_defs.h>
 
 #define ROCKCHIP_DEVICE_SETTINGS \
 		"stdout=serial,vidconsole\0" \
