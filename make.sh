@@ -17,8 +17,8 @@ else
 RKBIN_TOOLS=../rkbin/tools
 fi
 
-CROSS_COMPILE_ARM32=$(command -v arm-linux-gnueabi-gcc)
-CROSS_COMPILE_ARM64=$(command -v aarch64-linux-gnu-gcc)
+CROSS_COMPILE_ARM32=$(command -v arm-linux-gnueabi-gcc) || true
+CROSS_COMPILE_ARM64=$(command -v aarch64-linux-gnu-gcc) || true
 
 if [ -z "${CROSS_COMPILE_ARM32}" ]; then
 CROSS_COMPILE_ARM32=../prebuilts/gcc/linux-x86/arm/gcc-linaro-6.3.1-2017.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
