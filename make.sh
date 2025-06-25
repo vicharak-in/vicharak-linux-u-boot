@@ -17,12 +17,7 @@ else
 RKBIN_TOOLS=../rkbin/tools
 fi
 
-CROSS_COMPILE_ARM32=$(command -v arm-linux-gnueabi-gcc)
 CROSS_COMPILE_ARM64=$(command -v aarch64-linux-gnu-gcc)
-
-if [ -z "${CROSS_COMPILE_ARM32}" ]; then
-CROSS_COMPILE_ARM32=../prebuilts/gcc/linux-x86/arm/gcc-linaro-6.3.1-2017.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-fi
 
 if [ -z "${CROSS_COMPILE_ARM64}" ]; then
 CROSS_COMPILE_ARM64=../prebuilts/gcc/linux-x86/aarch64/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
@@ -144,7 +139,6 @@ function process_args()
 				;;
 			CROSS_COMPILE=*)  # set CROSS_COMPILE
 				ARG_COMPILE="y"
-				CROSS_COMPILE_ARM32=${1#*=}
 				CROSS_COMPILE_ARM64=${1#*=}
 				if [ ${CMD_ARGS} == $1 ]; then
 					shift 1
@@ -286,13 +280,10 @@ function select_toolchain()
 	# If no outer CROSS_COMPILE, look for it from CC_FILE.
 	if [ "${ARG_COMPILE}" != "y" ]; then
 		if [ -f ${CC_FILE} ]; then
-			CROSS_COMPILE_ARM32=`cat ${CC_FILE}`
 			CROSS_COMPILE_ARM64=`cat ${CC_FILE}`
 		else
 			if grep -q '^CONFIG_ARM64=y' .config ; then
 				CROSS_COMPILE_ARM64=$(cd `dirname ${CROSS_COMPILE_ARM64}`; pwd)"/aarch64-linux-gnu-"
-			else
-				CROSS_COMPILE_ARM32=$(cd `dirname ${CROSS_COMPILE_ARM32}`; pwd)"/arm-linux-gnueabihf-"
 			fi
 		fi
 	fi
@@ -302,11 +293,6 @@ function select_toolchain()
 		TOOLCHAIN_NM=${CROSS_COMPILE_ARM64}nm
 		TOOLCHAIN_OBJDUMP=${CROSS_COMPILE_ARM64}objdump
 		TOOLCHAIN_ADDR2LINE=${CROSS_COMPILE_ARM64}addr2line
-	else
-		TOOLCHAIN=${CROSS_COMPILE_ARM32}
-		TOOLCHAIN_NM=${CROSS_COMPILE_ARM32}nm
-		TOOLCHAIN_OBJDUMP=${CROSS_COMPILE_ARM32}objdump
-		TOOLCHAIN_ADDR2LINE=${CROSS_COMPILE_ARM32}addr2line
 	fi
 
 	if [ ! `which ${TOOLCHAIN}gcc` ]; then
