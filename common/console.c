@@ -707,7 +707,7 @@ int ctrlc_or_q(void)
 				return 1;
 			case 0x03:		/* ^C - Control C */
 				ctrlc_was_pressed = ctrlc_disabled ? ctrlc_was_pressed : 1;
-				return 0;
+				return 1;
 			default:
 				break;
 			}
