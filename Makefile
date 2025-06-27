@@ -1092,17 +1092,30 @@ else
 ROCKCHIP_IMG_TYPE := rksd
 endif
 
+DDR_BIN ?= rkbin/bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2736MHz_v1.14.bin
+
+$(DDR_BIN):
+	@echo "ERROR: DDR binary '$(DDR_BIN)' not found!" >&2
+	@exit 1
+
+
 # TPL + SPL
 ifeq ($(CONFIG_SPL)$(CONFIG_TPL),yy)
 ifeq ($(CONFIG_ROCKCHIP_RK3399),y)
 MKIMAGEFLAGS_u-boot-tpl-rockchip.bin = -n rk3399 -T $(ROCKCHIP_IMG_TYPE)
 else ifeq ($(CONFIG_ROCKCHIP_RK3588),y)
-MKIMAGEFLAGS_u-boot-tpl-rockchip.bin = -n rk3588 -T $(ROCKCHIP_IMG_TYPE)
+MKIMAGEFLAGS_u-boot-tpl-rockchip.bin = -n rk3588 -T $(ROCKCHIP_IMG_TYPE) -d $(DDR_BIN)
 else
 MKIMAGEFLAGS_u-boot-tpl-rockchip.bin = -n $(CONFIG_SYS_SOC) -T $(ROCKCHIP_IMG_TYPE)
 endif
-tpl/u-boot-tpl-rockchip.bin: tpl/u-boot-tpl.bin FORCE
+
+ifeq ($(CONFIG_ROCKCHIP_RK3588),y)
+tpl/u-boot-tpl-rockchip.bin: $(DDR_BIN) FORCE
 	$(call if_changed,mkimage)
+else
+tpl/u-boot-tpl-rockchip.bin: tpl/u-boot-tpl.bin FORCE
+endif
+
 idbloader.img: tpl/u-boot-tpl-rockchip.bin spl/u-boot-spl.bin FORCE
 	$(call if_changed,cat)
 else
