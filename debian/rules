@@ -20,7 +20,11 @@ BOARD ?= rk3399-vaaman
 ${BOARD}:
 	@mkdir -p debian/build/$@
 
-	./make.sh ${BOARD}
+	@if [ "${BOARD}" = "rk3588-axon" ]; then \
+		./make.sh ${BOARD} --spl; \
+	else \
+		./make.sh ${BOARD}; \
+	fi
 
 	@cp uboot.img debian/build/${BOARD}/u-boot.img
 	@cp idbloader.img debian/build/${BOARD}/idbloader.img
