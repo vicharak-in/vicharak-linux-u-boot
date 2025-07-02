@@ -765,6 +765,7 @@ function pack_images()
 	if [ "${ARG_RAW_COMPILE}" != "y" ]; then
 		if [ "${PLAT_TYPE}" == "FIT" ]; then
 			pack_fit_image ${ARG_LIST_FIT}
+			pack_idblock
 		elif [ "${PLAT_TYPE}" == "DECOMP" ]; then
 			${SCRIPT_DECOMP} ${ARG_LIST_FIT} --chip ${RKCHIP_LABEL}
 		else
