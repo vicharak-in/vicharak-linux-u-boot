@@ -1,3 +1,12 @@
+u-boot-vicharak (1.1.13) stable; urgency=medium
+
+  * Enable SATA, AHCI and SCSI support in defconfig to allow accessing SATA
+    devices from the U-Boot shell and booting from them.
+  * Add scsi0 as a valid boot target in rockchip-common.h, and update
+    the bootmenu in vicharak_common_defs.h to include a SATA boot option.
+
+ -- Brajesh Patil <brajeshpatil11@gmail.com>  Sat, 23 Aug 2025 15:13:53 +0530
+
 u-boot-vicharak (1.1.12) stable; urgency=medium
 
   * Fixed Ctrl+C not working at U-Boot autoboot prompt for rk3399-vaaman.
