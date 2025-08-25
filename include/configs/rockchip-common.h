@@ -94,6 +94,12 @@
 	#define BOOT_TARGET_USB(func)
 #endif
 
+#if CONFIG_IS_ENABLED(CMD_SCSI)
+	#define BOOT_TARGET_SCSI(func) func(SCSI, scsi, 0)
+#else
+	#define BOOT_TARGET_SCSI(func)
+#endif
+
 #if CONFIG_IS_ENABLED(CMD_PXE)
 	#define BOOT_TARGET_PXE(func) func(PXE, pxe, na)
 #else
@@ -112,6 +118,7 @@
 	BOOT_TARGET_MTD(func) \
 	BOOT_TARGET_RKNAND(func) \
 	BOOT_TARGET_USB(func) \
+	BOOT_TARGET_SCSI(func) \
 	BOOT_TARGET_PXE(func) \
 	BOOT_TARGET_DHCP(func)
 
