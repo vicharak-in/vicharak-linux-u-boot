@@ -71,6 +71,18 @@ void console_record_print_purge(void);
  */
 int console_announce_r(void);
 
+#ifndef __ASSEMBLY__
+#include <stdbool.h>
+
+/**
+ * @brief Indicates whether the console magic sequence matched.
+ *
+ * Used to determine if console access should be granted.
+ */
+extern bool console_magic_match;
+bool is_mmc_magic_match(void);
+#endif /* __ASSEMBLY__ */
+
 /*
  * CONSOLE multiplexing.
  */

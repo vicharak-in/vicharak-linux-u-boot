@@ -661,8 +661,15 @@ int ctrlc(void)
 		if (tstc()) {
 			switch (getc()) {
 			case 0x03:		/* ^C - Control C */
-				ctrlc_was_pressed = 1;
-				return 1;
+				/*
+				 * Only register Ctrl+C if the console magic
+				 * does not match. This prevents ^C from
+				 * breaking execution when console is locked.
+				 */
+				if (!console_magic_match) {
+					ctrlc_was_pressed = 1;
+					return 1;
+				}
 			default:
 				break;
 			}
@@ -683,8 +690,15 @@ int ctrlq(void)
 		if (tstc()) {
 			switch (getc()) {
 			case 0x11:		/* ^Q - Control Q */
-				ctrlq_was_pressed = 1;
-				return 1;
+				/*
+				 * Only register Ctrl+Q if the console magic
+				 * does not match. This prevents ^Q from
+				 * breaking execution when console is locked.
+				 */
+				if (!console_magic_match) {
+					ctrlq_was_pressed = 1;
+					return 1;
+				}
 			default:
 				break;
 			}
@@ -703,11 +717,15 @@ int ctrlc_or_q(void)
 		if (tstc()) {
 			switch (getc()) {
 			case 0x11:		/* ^Q - Control Q */
-				ctrlq_was_pressed = ctrlq_disabled ? ctrlq_was_pressed : 1;
-				return 1;
+				if (!console_magic_match) {
+					ctrlq_was_pressed = ctrlq_disabled ? ctrlq_was_pressed : 1;
+					return 1;
+				}
 			case 0x03:		/* ^C - Control C */
-				ctrlc_was_pressed = ctrlc_disabled ? ctrlc_was_pressed : 1;
-				return 1;
+				if (!console_magic_match) {
+					ctrlc_was_pressed = ctrlc_disabled ? ctrlc_was_pressed : 1;
+					return 1;
+				}
 			default:
 				break;
 			}

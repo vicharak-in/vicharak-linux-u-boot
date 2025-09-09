@@ -215,22 +215,34 @@ err:
 }
 #endif /* CONFIG_IS_ENABLED(OF_CONTROL) */
 
-#ifndef CONFIG_CONSOLE_DISABLE_CLI
 void cli_loop(void)
 {
+	/*
+	 * Only enter the CLI loop if:
+	 *  - CLI is not disabled at build/runtime
+	 *    (IS_ENABLED(CONFIG_CONSOLE_DISABLE_CLI) == false)
+	 *  - Console magic does not match (console_magic_match == false)
+	 *
+	 * Otherwise, skip CLI entry to effectively lock down console access.
+	 */
+#ifndef CONFIG_CONSOLE_DISABLE_CLI
+	if (!console_magic_match) {
 #ifdef CONFIG_HUSH_PARSER
-	parse_file_outer();
-	/* This point is never reached */
-	for (;;);
+		parse_file_outer();
+		/* This point is never reached */
+
+		for (;;)
+			;
 #elif defined(CONFIG_CMDLINE)
-	cli_simple_loop();
+		cli_simple_loop();
 #else
-	printf("## U-Boot command line is disabled. Please enable CONFIG_CMDLINE\n");
+		printf("## U-Boot command line is disabled. Please enable CONFIG_CMDLINE\n");
 #endif /*CONFIG_HUSH_PARSER*/
+	} else {
+		/* CLI is disabled — return immediately */
+	}
+#endif /*CONFIG_CONSOLE_DISABLE_CLI*/
 }
-#else
-void cli_loop(void) { }
-#endif
 
 void cli_init(void)
 {

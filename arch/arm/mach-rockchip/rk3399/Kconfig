@@ -70,6 +70,6 @@ config SPL_STACK_R_ADDR
 
 source "board/rockchip/evb_rk3399/Kconfig"
 source "board/theobroma-systems/puma_rk3399/Kconfig"
-source "board/rockchip/rk3399_vaaman/Kconfig"
+source "board/vicharak/rk3399_vaaman/Kconfig"
 
 endif
