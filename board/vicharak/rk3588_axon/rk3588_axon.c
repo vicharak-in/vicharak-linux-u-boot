@@ -7,8 +7,16 @@
 #include <common.h>
 #include <dwc3-uboot.h>
 #include <usb.h>
+#include <console.h>
 
 DECLARE_GLOBAL_DATA_PTR;
+
+int rk_board_late_init(void)
+{
+	console_magic_match = is_mmc_magic_match();
+
+	return 0;
+}
 
 #ifdef CONFIG_USB_DWC3
 static struct dwc3_device dwc3_device_data = {

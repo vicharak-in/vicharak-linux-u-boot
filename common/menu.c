@@ -6,6 +6,7 @@
 
 #include <common.h>
 #include <cli.h>
+#include <console.h>
 #include <malloc.h>
 #include <errno.h>
 #include <linux/list.h>
@@ -214,9 +215,22 @@ static inline int menu_interactive_choice(struct menu *m, void **choice)
 					puts(ANSI_CLEAR_LINE);
 					printf("\t[(%s) not a valid key]\n", cbuf);
 				}
-			} else if (readret == -1)  {
-				printf("<INTERRUPT>\n");
-				return -EINTR;
+			} else if (readret == -1) {
+				/*
+				 * When console magic matches, ignore
+				 * interrupts during menu handling. This
+				 * ensures users cannot break out of the
+				 * extlinux.conf boot flow while console access
+				 * is locked, preventing a kernel crash since
+				 * no CLI would be available.
+				 */
+				if (console_magic_match) {
+					readret = 0;
+					continue;
+				} else {
+					printf("<INTERRUPT>\n");
+					return -EINTR;
+				}
 			} else {
 				return menu_default_choice(m, choice);
 			}

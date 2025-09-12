@@ -18,6 +18,7 @@
 #include <power/regulator.h>
 #include <u-boot/sha256.h>
 #include <usb.h>
+#include <console.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -265,6 +266,8 @@ int board_usb_init(int index, enum usb_init_type init)
 
 int rk_board_late_init(void)
 {
+	console_magic_match = is_mmc_magic_match();
+
 #ifdef CONFIG_LED
 	// Turn on both leds
 	setup_gpio_leds(1, 1);

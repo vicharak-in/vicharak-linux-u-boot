@@ -34,6 +34,6 @@ config TARGET_RK3588_AXON
 	  2 x USB Type-C connectors for power delivery, 3.1 USB and DP.
 
 source board/rockchip/evb_rk3588/Kconfig
-source board/rockchip/rk3588_axon/Kconfig
+source board/vicharak/rk3588_axon/Kconfig
 
 endif
