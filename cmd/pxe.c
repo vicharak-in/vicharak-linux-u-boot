@@ -672,7 +672,7 @@ static int label_boot_fdtoverlay(cmd_tbl_t *cmdtp, struct pxe_label *label)
 		}
 
 		/* Resize main fdt */
-		fdt_shrink_to_minimum(working_fdt, 8192);
+		fdt_shrink_to_minimum(working_fdt, 32768);
 
 		blob = map_sysmem(fdtoverlay_addr, 0);
 		err = fdt_check_header(blob);
