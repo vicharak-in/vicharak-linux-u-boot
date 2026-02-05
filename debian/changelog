@@ -1,3 +1,10 @@
+u-boot-vicharak (1.1.14) stable; urgency=medium
+
+  * Increase FDT overlay buffer from 8KB to 32KB, if the overlays size gets
+    high enough then it shows overflow memory.
+
+ -- djkabutar <d.kabutarwala@yahoo.com>  Thu, 5 Feb 2026 10:37:53 +0530
+
 u-boot-vicharak (1.1.13) stable; urgency=medium
 
   * Enable SATA, AHCI and SCSI support in defconfig to allow accessing SATA
