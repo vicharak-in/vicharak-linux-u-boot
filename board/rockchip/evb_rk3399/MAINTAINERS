@@ -95,3 +95,9 @@ M:	Jagan Teki <jagan@amarulasolutions.com>
 S:	Maintained
 F:	configs/rock-pi-n10-rk3399pro_defconfig
 F:	arch/arm/dts/rk3399pro-rock-pi-n10*
+
+VICHARAK-VAAMAN
+M:	djkabutar <d.kabutarwala@yahoo.com>
+S:	Maintained
+F:	configs/rk3399-vaaman_defconfig
+F:	arch/arm/dts/rk3399-vaaman-u-boot.dtsi
