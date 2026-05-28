@@ -58,6 +58,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
 	rk3399-puma-ddr1866.dtb \
 	rv1108-evb.dtb \
 	rk3588-axon.dtb \
+	rk3588-axon-cm-evb1.dtb \
 	rk3399-vaaman.dtb
 dtb-$(CONFIG_ARCH_MESON) += \
 	meson-gxbb-odroidc2.dtb
