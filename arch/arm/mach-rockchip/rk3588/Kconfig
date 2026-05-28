@@ -33,7 +33,27 @@ config TARGET_RK3588_AXON
 	  as well as micro HDMI ports and
 	  2 x USB Type-C connectors for power delivery, 3.1 USB and DP.
 
+config TARGET_RK3588_AXON_CM_EVB1
+	bool "Vicharak RK3588 Axon Computer Module Evolution board 1"
+	select BOARD_LATE_INIT
+	help
+	The AXON-CM is a compact, high-performance System-on-Module (SoM)
+	based on the Rockchip RK3588 octa-core processor, featuring world's
+	first integrated on-board Wi-Fi and Bluetooth module.
+
+	Axon CM EV1 Includes:
+
+	1x PCIe2.0 : 4G/5G Module + GPS
+	2x USB2.0  : External USB Ports
+	1x RGMII   : Ethernet (via PHY IC)
+	1x CAN     : OBD_2 (J1962)
+	1x HDMI0   : Micro HDMI Connector
+	1x I2S     : Audio Codec (ES8388)
+	2x I2C     : FPC Connector (AFC42-S24FMA-1H)
+	1x DSI     : 2 LANE MIPI Connector
+
 source board/rockchip/evb_rk3588/Kconfig
 source board/vicharak/rk3588_axon/Kconfig
+source board/vicharak/rk3588_axon_cm_evb1/Kconfig
 
 endif
