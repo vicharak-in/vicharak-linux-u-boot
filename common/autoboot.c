@@ -272,7 +272,10 @@ static int abortboot(int bootdelay)
 #endif
 
 	if(abort){
+#ifdef CONFIG_DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
 		run_command("rockchip_show_fbbase", 0);
+#endif
+
 #ifdef CONFIG_CMD_BOOTMENU
 		if (had_ctrlq())
 			run_command("bootmenu 10", 0);
@@ -372,7 +375,11 @@ void autoboot_command(const char *s)
 #if defined(CONFIG_AUTOBOOT_KEYED) && !defined(CONFIG_AUTOBOOT_KEYED_CTRLC)
 		disable_ctrlc(prev);	/* restore Control C checking */
 #endif
+
+#ifdef CONFIG_DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
 		run_command("rockchip_show_fbbase", 0);
+#endif
+
 #ifdef CONFIG_CMD_BOOTMENU
 		if (had_ctrlq())
 			run_command("bootmenu 10", 0);
