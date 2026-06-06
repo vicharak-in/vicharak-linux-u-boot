@@ -1668,9 +1668,8 @@ static void handle_pxe_menu(cmd_tbl_t *cmdtp, struct pxe_menu *cfg)
 	if (!m)
 		return;
 
-#ifdef CONFIG_DRM_ROCKCHIP
+#ifdef CONFIG_DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
 	run_command("rockchip_show_fbbase", 0);
-
 #endif
 
 	puts(ANSI_CLEAR_CONSOLE);
