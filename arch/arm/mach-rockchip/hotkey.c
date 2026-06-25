@@ -38,12 +38,14 @@ bool is_hotkey(enum hotkey_t id)
 		return gd->console_evt == CTRL_B;
 
 #ifndef CONFIG_CONSOLE_DISABLE_CLI
-	if (!console_magic_match) {
-		case HK_ROCKUSB_DNL:
+	case HK_ROCKUSB_DNL:
+		if (!console_magic_match)
 			return gd->console_evt == CTRL_D;
-		case HK_FASTBOOT:
+		break;
+	case HK_FASTBOOT:
+		if (!console_magic_match)
 			return gd->console_evt == CTRL_F;
-	}
+		break;
 #endif
 	default:
 		break;
