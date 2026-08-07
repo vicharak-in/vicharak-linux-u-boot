@@ -30,6 +30,7 @@ DECLARE_GLOBAL_DATA_PTR;
 /* Stored value of bootdelay, used by autoboot_command() */
 static int stored_bootdelay;
 
+#ifdef CONFIG_BOOTKEY
 static void rkflash_enter_loader_mode(void)
 {
 #if defined(CONFIG_ROCKCHIP_BOOT_MODE_REG)
@@ -37,6 +38,7 @@ static void rkflash_enter_loader_mode(void)
 #endif
 	do_reset(NULL, 0, 0, NULL);
 }
+#endif
 
 #if defined(CONFIG_AUTOBOOT_KEYED)
 #if defined(CONFIG_AUTOBOOT_STOP_STR_SHA256)

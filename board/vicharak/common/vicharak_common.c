@@ -9,8 +9,6 @@
 #include <blk.h>
 #include <console.h>
 
-bool console_magic_match;
-
 /**
  * is_mmc_magic_match - Check if the MMC magic sequence matches
  *

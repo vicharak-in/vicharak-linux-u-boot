@@ -26,6 +26,7 @@
 #endif
 
 DECLARE_GLOBAL_DATA_PTR;
+bool console_magic_match;
 
 static int on_console(const char *name, const char *value, enum env_op op,
 	int flags)
