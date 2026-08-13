@@ -26,11 +26,19 @@
  * message that includes some other pre-processor symbols in the text.
  */
 
+#ifdef CONFIG_CMD_BOOT_ANDROID
+#define BOOTENV_ANDROID_BLKDEV(devtypel) \
+	"boot_android " #devtypel " ${devnum} || "
+#else
+#define BOOTENV_ANDROID_BLKDEV(devtypel)
+#endif
+
 #define BOOTENV_SHARED_BLKDEV_BODY(devtypel) \
-		"if " #devtypel " dev ${devnum}; then " \
-			"setenv devtype " #devtypel "; " \
-			"run scan_dev_for_boot_part; " \
-		"fi\0"
+	"if " #devtypel " dev ${devnum}; then " \
+		"setenv devtype " #devtypel "; " \
+		BOOTENV_ANDROID_BLKDEV(devtypel) \
+		"run scan_dev_for_boot_part; " \
+	"fi\0"
 
 #define BOOTENV_SHARED_BLKDEV(devtypel) \
 	#devtypel "_boot=" \

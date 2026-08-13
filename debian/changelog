@@ -1,3 +1,13 @@
+u-boot-vicharak (1.1.15) stable; urgency=medium
+
+  * Add Ctrl+B shortcut to enter Rockchip loader mode during autoboot.
+  * Enable Android boot command `boot_android` support on Axon linux.
+  * Try Android boot first on all supported boot media.
+  * Increase the U-Boot FIT slot to support the larger Android-enabled image.
+  * Fix prompt handling for kernel menu
+
+ -- Ajit Singh <ajeetsinghchahar2@gmail.com>  Fri, 07 Aug 2026 10:30:00 +0530
+
 u-boot-vicharak (1.1.14) stable; urgency=medium
 
   * Increase FDT overlay buffer from 8KB to 32KB, if the overlays size gets
