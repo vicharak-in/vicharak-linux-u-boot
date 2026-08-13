@@ -1462,7 +1462,6 @@ static int parse_pxefile_top(cmd_tbl_t *cmdtp, char *p, unsigned long base,
 		err = 0;
 		switch (t.type) {
 		case T_MENU:
-			cfg->prompt = 1;
 			err = parse_menu(cmdtp, &p, cfg,
 				base + ALIGN(strlen(b) + 1, 4),
 				nest_level);
@@ -1496,6 +1495,7 @@ static int parse_pxefile_top(cmd_tbl_t *cmdtp, char *p, unsigned long base,
 			break;
 
 		case T_PROMPT:
+			err = parse_integer(&p, &cfg->prompt);
 			eol_or_eof(&p);
 			break;
 
@@ -1669,7 +1669,9 @@ static void handle_pxe_menu(cmd_tbl_t *cmdtp, struct pxe_menu *cfg)
 		return;
 
 #ifdef CONFIG_DRM_ROCKCHIP_VIDEO_FRAMEBUFFER
-	run_command("rockchip_show_fbbase", 0);
+	if(cfg->timeout || cfg->prompt) {
+		run_command("rockchip_show_fbbase", 0);
+	}
 #endif
 
 	puts(ANSI_CLEAR_CONSOLE);
