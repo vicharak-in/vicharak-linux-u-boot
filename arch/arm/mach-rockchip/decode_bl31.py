@@ -8,6 +8,7 @@
 A script to decode bl31.elf to binary
 """
 
+import common.session
 import os
 import sys
 import getopt
