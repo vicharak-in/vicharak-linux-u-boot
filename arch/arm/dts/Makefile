@@ -59,7 +59,9 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
 	rv1108-evb.dtb \
 	rk3588-axon.dtb \
 	rk3588-axon-cm-evb1.dtb \
-	rk3399-vaaman.dtb
+	rk3399-vaaman.dtb \
+	rk3588-vaaman2.dtb 
+
 dtb-$(CONFIG_ARCH_MESON) += \
 	meson-gxbb-odroidc2.dtb
 dtb-$(CONFIG_TEGRA) += tegra20-harmony.dtb \

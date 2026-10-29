@@ -20,7 +20,8 @@ BOARD ?= rk3399-vaaman
 ${BOARD}:
 	@mkdir -p debian/build/$@
 
-	@if [[ "${BOARD}" = "rk3588-axon" || "${BOARD}" = "rk3588-axon-cm-evb1" ]]; then \
+
+	@if [ "${BOARD}" = "rk3588-axon" ] || "${BOARD}" = "rk3588-axon-cm-evb1" || [ "${BOARD}" = "rk3588-vaaman2" ]; then \
 		./make.sh ${BOARD} --spl; \
 	else \
 		./make.sh ${BOARD}; \
@@ -30,11 +31,19 @@ ${BOARD}:
 	@cp idbloader.img debian/build/${BOARD}/idbloader.img
 	@if [ "${BOARD}" = "rk3399-vaaman" ]; then cp trust.img debian/build/${BOARD}/trust.img; fi
 
+build-arch: build
+
+build-indep: build
+
 build: ${BOARD}
 
-binary-arch: package-${BOARD}
+binary-arch: build-arch package-${BOARD}
 
-binary: binary-arch
+binary-indep:
+
+binary: binary-arch binary-indep
+
+.PHONY: build build-arch build-indep binary binary-arch binary-indep clean
 
 package-%:
 	@rm -rf debian/tmp && mkdir -m 755 -p debian/tmp/u-boot/usr/lib/u-boot/${BOARD}
@@ -50,9 +59,9 @@ package-%:
 	@cp debian/changelog "debian/tmp/u-boot/usr/share/doc/u-boot/${BOARD}/changelog.Debian"
 	@gzip -9 "debian/tmp/u-boot/usr/share/doc/u-boot/${BOARD}/changelog.Debian"
 	@sh -c "cd 'debian/tmp/u-boot'; find . -type f ! -path './DEBIAN/*' -printf '%P\0' | xargs -r0 md5sum > DEBIAN/md5sums"
-	@chown -R root:root "debian/tmp/u-boot" && chmod -R go-w "debian/tmp/u-boot" && chmod -R a+rX "debian/tmp/u-boot"
+	@chmod -R go-w "debian/tmp/u-boot" && chmod -R a+rX "debian/tmp/u-boot"
 	@dpkg-gencontrol -pu-boot-${BOARD} -P"debian/tmp/u-boot"
-	@dpkg-deb -Zxz --build "debian/tmp/u-boot" ..
+	@dpkg-deb --root-owner-group -Zxz --build "debian/tmp/u-boot" ..
 
 clean:
 	@rm -rf debian/*tmp debian/tmp debian/build debian/files
