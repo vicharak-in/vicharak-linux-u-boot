@@ -91,3 +91,5 @@ GTAGS
 vaaman/
 tools/boot
 tools/spl_size_limit
+config.bat
+node_modules
