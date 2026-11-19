@@ -52,8 +52,16 @@ config TARGET_RK3588_AXON_CM_EVB1
 	2x I2C     : FPC Connector (AFC42-S24FMA-1H)
 	1x DSI     : 2 LANE MIPI Connector
 
+config TARGET_RK3588_VAAMAN2
+	bool "Vicharak RK3588 Vaaman2 board"
+	select BOARD_LATE_INIT
+	help
+	  The Vaaman2 is a Single Board Computer (SBC) designed by Vicharak,
+	  which is powered by the RK3588 processor.
+
 source board/rockchip/evb_rk3588/Kconfig
 source board/vicharak/rk3588_axon/Kconfig
 source board/vicharak/rk3588_axon_cm_evb1/Kconfig
+source board/vicharak/rk3588_vaaman2/Kconfig
 
 endif

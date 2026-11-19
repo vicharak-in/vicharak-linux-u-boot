@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright (C) 2020 Rockchip Electronics Co., Ltd
 #
@@ -8,6 +8,8 @@
 A script to decode bl31.elf to binary
 """
 
+import common.transport
+import common.session
 import os
 import sys
 import getopt
